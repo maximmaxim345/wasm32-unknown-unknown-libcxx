@@ -14,8 +14,8 @@ pub use ffi::CxxTestFunction;
 use iced::widget::{column, container, slider, text};
 use iced::{Center, Element, Fill};
 
-#[cfg_attr(target_arch = "wasm32", wasm_bindgen::prelude::wasm_bindgen(start))]
-pub fn main() {
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen::prelude::wasm_bindgen)]
+pub fn start() {
     #[cfg(target_arch = "wasm32")]
     {
         console_log::init().expect("Initialize logger");
@@ -81,7 +81,6 @@ impl Demo {
 
 #[cfg(target_arch = "wasm32")]
 const ALIGN: usize = 8;
-
 
 // malloc and free implementations from https://github.com/rusqlite/rusqlite
 #[cfg(target_arch = "wasm32")]
