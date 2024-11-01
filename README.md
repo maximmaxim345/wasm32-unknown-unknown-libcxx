@@ -9,8 +9,6 @@ This project provides C++ standard library and LibC support for the `wasm32-unkn
 cmake -GNinja -S. -Bbuild -DCMAKE_INSTALL_PREFIX=`pwd`/install
 cmake --build build
 cmake --install build
-# Generate prebuild packages with
-cmake --build build --target package
 ```
 
 This will build and install:
@@ -69,4 +67,3 @@ This project builds upon:
 
 - [wasm32-unknown-unknown-openbsd-libc](https://github.com/trevyn/wasm32-unknown-unknown-openbsd-libc)
 - [LlvmCrossCompileArmCortexM](https://github.com/KKoovalsky/LlvmCrossCompileArmCortexM)
-

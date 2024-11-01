@@ -194,17 +194,3 @@ install(CODE "
     file(COPY \"\${CMAKE_INSTALL_PREFIX}/lib/libopenbsd-libc.a\" DESTINATION \"\${CMAKE_INSTALL_PREFIX}/lib\")
     file(RENAME \"\${CMAKE_INSTALL_PREFIX}/lib/libopenbsd-libc.a\" \"\${CMAKE_INSTALL_PREFIX}/lib/libc.a\")
 ")
-
-# Configure CPack
-include(InstallRequiredSystemLibraries)
-set(CPACK_PACKAGE_NAME "Wasm32UnknownUnknownLibCXX")
-set(CPACK_PACKAGE_VENDOR "YourCompany")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Wasm32 unknown-unknown libc++ cross-compilation environment")
-set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "Wasm32UnknownUnknownLibCXX")
-set(CPACK_PACKAGE_FILE_NAME "wasm32-unknown-unknown-libcxx-${PROJECT_VERSION}")
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "wasm32-unknown-unknown-libcxx-${PROJECT_VERSION}-source")
-set(CPACK_GENERATOR "TGZ;ZIP")
-include(CPack)
