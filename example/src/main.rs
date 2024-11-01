@@ -1,3 +1,3 @@
 fn main() {
-    wasmcxx::main();
+    wasmcxx::start();
 }

@@ -1,0 +1,49 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build clang lld llvm
+          rustup toolchain install nightly
+          rustup default nightly
+          rustup target add wasm32-unknown-unknown
+          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Build toolchain
+        run: |
+          mkdir build
+          cmake -GNinja -S. -Bbuild -DCMAKE_INSTALL_PREFIX=$RUNNER_TEMP/install
+          cmake --build build
+          cmake --install build
+
+      - name: Build and Test Example Project as dev build
+        working-directory: example
+        run: |
+          source $RUNNER_TEMP/install/env.sh
+          wasm-pack build --target web --dev
+          wasm-pack test --node
+
+      - name: Build and Test Example Project as release build
+        working-directory: example
+        run: |
+          source $RUNNER_TEMP/install/env.sh
+          wasm-pack build --target web
+          wasm-pack test --node --release
+
+      - name: Build and Test Example Project on linux
+        run: |
+          cargo build
+          cargo test

@@ -9,10 +9,11 @@
   <body style="height: 100%; margin: 0">
 
     <script type="module">
-      import init from "./pkg/wasmcxx.js";
+      import init, {start} from "./pkg/wasmcxx.js";
 
       (async () => {
         await init();
+        start();
       })();
     </script>
   </body>
