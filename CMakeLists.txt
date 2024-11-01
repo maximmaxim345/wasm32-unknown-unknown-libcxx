@@ -47,6 +47,14 @@ file(COPY
     "${OPENBSD_SRC}/sys/sys/endian.h"
     DESTINATION "${BUILD_INCLUDE_DIR}/sys"
 )
+file(COPY
+    "${OPENBSD_SRC}/sys/sys/fcntl.h"
+    DESTINATION "${BUILD_INCLUDE_DIR}"
+)
+file(COPY
+    "${OPENBSD_SRC}/sys/sys/malloc.h"
+    DESTINATION "${BUILD_INCLUDE_DIR}"
+)
 file(REMOVE "${BUILD_INCLUDE_DIR}/sys/syscall.h")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -isystem ${BUILD_INCLUDE_DIR}")
