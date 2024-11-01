@@ -23,8 +23,6 @@ FetchContent_Declare(
     OpenBSDSrc
     GIT_REPOSITORY https://github.com/openbsd/src.git
     GIT_TAG 86f778b976d08af3c1842d7f9984f0ca71a98f54 # From 31.08.2024
-    GIT_SHALLOW ON
-    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 FetchContent_MakeAvailable(OpenBSDSrc)
 set(OPENBSD_SRC ${openbsdsrc_SOURCE_DIR})
