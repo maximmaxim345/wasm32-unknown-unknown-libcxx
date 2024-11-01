@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.21)
 # Set the CMake toolchain file for cross-compilation
 set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/clang_toolchain.cmake" CACHE PATH "Path to the CMake's toolchain file")
 
-project(Wasm32UnknownUnknownLibCXX VERSION 0.1.1 LANGUAGES C CXX ASM)
+project(Wasm32UnknownUnknownLibCXX VERSION 0.1.2 LANGUAGES C CXX ASM)
 
 set(LIBCXX_ENABLE_EXCEPTIONS OFF CACHE BOOL "" FORCE)
 set(LIBCXXABI_ENABLE_EXCEPTIONS OFF CACHE BOOL "" FORCE)
