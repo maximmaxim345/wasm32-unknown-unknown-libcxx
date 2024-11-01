@@ -9,10 +9,23 @@ mod ffi {
     }
 }
 
+// Rust version of the C++ function
+pub fn rust_test_function(a: i32, b: i32, c: i32) -> i32 {
+    let mut numbers = vec![a, b, c];
+    numbers.sort();
+    let sum: i32 = numbers.iter().sum();
+    let average = sum as f64 / numbers.len() as f64;
+    let count_above_avg = numbers.iter().filter(|&&num| num as f64 > average).count() as i32;
+    numbers = numbers.iter().map(|&num| num * num).collect();
+    let sum_of_squares: i32 = numbers.iter().sum();
+    sum + count_above_avg + (f64::from(sum_of_squares).sqrt() as i32)
+}
+
 pub use autoffi::AutoCxxTestFunction;
 pub use ffi::CxxTestFunction;
 use iced::widget::{column, container, slider, text};
 use iced::{Center, Element, Fill};
+use wasm_bindgen_test::*;
 
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen::prelude::wasm_bindgen)]
 pub fn start() {
@@ -76,6 +89,35 @@ impl Demo {
                 AutoCxxTestFunction(self.slider.into(), 0.into(), 12341.into(),).0
             )));
         container(content).center_y(Fill).into()
+    }
+}
+
+#[wasm_bindgen_test(unsupported = test)]
+fn t() {
+    assert_eq!(
+        CxxTestFunction(1, 2, 3),
+        AutoCxxTestFunction(1.into(), 2.into(), 3.into()).into()
+    );
+}
+
+#[wasm_bindgen_test(unsupported = test)]
+fn test_functions_with_random_inputs() {
+    use rand::{Rng, SeedableRng};
+
+    let mut rng = rand::rngs::StdRng::seed_from_u64(42);
+
+    for _ in 0..1000 {
+        let a: i32 = rng.gen_range(0..100);
+        let b: i32 = rng.gen_range(0..100);
+        let c: i32 = rng.gen_range(0..100);
+        println!("a: {}, b: {}, c: {}", a, b, c);
+
+        let cxx_result = CxxTestFunction(a, b, c);
+        let autocxx_result: i32 = AutoCxxTestFunction(a.into(), b.into(), c.into()).into();
+        let rust_result = rust_test_function(a, b, c);
+
+        assert_eq!(cxx_result, autocxx_result);
+        assert_eq!(autocxx_result, rust_result);
     }
 }
 
