@@ -8,22 +8,38 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install dependencies (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build libncurses5
+
+      - name: Install dependencies (macOS)
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew install cmake ninja
+
+      - name: Install dependencies (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          choco install cmake ninja
 
       - name: Setup rust toolchain
         run: |
           rustup toolchain install nightly
           rustup default nightly
           rustup target add wasm32-unknown-unknown
-          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+          cargo install wasm-pack
+        shell: bash
 
       - name: Install LLVM and Clang
         uses: KyleMayes/install-llvm-action@v2
@@ -38,26 +54,51 @@ jobs:
       - name: Build toolchain
         run: |
           mkdir build
-          cmake -GNinja -S. -Bbuild -DCMAKE_INSTALL_PREFIX=$RUNNER_TEMP/install
+          cmake -GNinja -S. -Bbuild -DCMAKE_INSTALL_PREFIX="${{ runner.temp }}/install"
           cmake --build build
           cmake --install build
+        shell: bash
 
       - name: Build and Test Example Project as dev build
+        if: matrix.os != 'windows-latest'
         working-directory: example
         run: |
-          source $RUNNER_TEMP/install/env.sh
+          source "${{ runner.temp }}/install/env.sh"
           wasm-pack build --target web --dev
           wasm-pack test --node
+        shell: bash
 
-      - name: Build and Test Example Project as release build
+      - name: Build and Test Example Project as dev build (Windows)
+        if: matrix.os == 'windows-latest'
         working-directory: example
         run: |
-          source $RUNNER_TEMP/install/env.sh
+          ${{ runner.temp }}/install/env.bat
+          wasm-pack build --target web --dev
+          wasm-pack test --node
+        shell: cmd
+
+      - name: Build and Test Example Project as release build
+        if: matrix.os != 'windows-latest'
+        working-directory: example
+        run: |
+          source "${{ runner.temp }}/install/env.sh"
           wasm-pack build --target web
           wasm-pack test --node --release
+        shell: bash
+
+      - name: Build and Test Example Project as release build (windows)
+        if: matrix.os == 'windows-latest'
+        working-directory: example
+        run: |
+          ${{ runner.temp }}/install/env.bat
+          wasm-pack build --target web
+          wasm-pack test --node --release
+        shell: cmd
 
       - name: Build and Test Example Project natively
+        if: matrix.os == 'ubuntu-latest'
         working-directory: example
         run: |
           cargo build
           cargo test
+        shell: bash
