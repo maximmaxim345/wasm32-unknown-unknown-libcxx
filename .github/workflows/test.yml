@@ -2,9 +2,9 @@ name: Build and Test
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build-and-test:
@@ -16,11 +16,24 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build clang lld llvm
+          sudo apt-get install -y cmake ninja-build libncurses5
+
+      - name: Setup rust toolchain
+        run: |
           rustup toolchain install nightly
           rustup default nightly
           rustup target add wasm32-unknown-unknown
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v2
+        with:
+          version: "18.1.8"
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
       - name: Build toolchain
         run: |
