@@ -190,6 +190,7 @@ install(CODE "
 
 # Install the environment script
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/env.sh" DESTINATION .)
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/env.bat" DESTINATION .)
 
 # Copy libc++.a to libstdc++.a
 install(CODE "
