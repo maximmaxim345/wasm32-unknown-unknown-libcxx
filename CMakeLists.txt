@@ -122,7 +122,7 @@ install(TARGETS openbsd-libc
 
 # Install OpenBSD libc headers
 install(DIRECTORY "${BUILD_INCLUDE_DIR}/"
-    DESTINATION include-libc
+    DESTINATION include
     FILES_MATCHING PATTERN "*.h"
 )
 
