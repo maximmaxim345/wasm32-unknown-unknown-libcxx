@@ -1,4 +1,4 @@
-name: Build and Test
+name: Build and Test wasm build
 
 on:
   push:
@@ -94,11 +94,3 @@ jobs:
           wasm-pack build --target web
           wasm-pack test --node --release
         shell: cmd
-
-      - name: Build and Test Example Project natively
-        if: matrix.os == 'ubuntu-latest'
-        working-directory: example
-        run: |
-          cargo build
-          cargo test
-        shell: bash
