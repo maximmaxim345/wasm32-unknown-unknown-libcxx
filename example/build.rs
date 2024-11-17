@@ -9,7 +9,7 @@ fn main() {
     println!("cargo:rerun-if-changed=test.cpp");
     println!("cargo:rerun-if-changed=test.hpp");
 
-    let cxx_flags = std::env::var("CXXFLAGS").unwrap_or_default();
+    let cxx_flags = std::env::var("CXXFLAGS_wasm32_unknown_unknown").unwrap_or_default();
     let all_clang_args: Vec<&str> = cxx_flags
         .split_whitespace()
         .chain(std::iter::once("-std=c++14"))
