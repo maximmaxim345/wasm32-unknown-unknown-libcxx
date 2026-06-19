@@ -258,6 +258,17 @@ install(CODE "
     file(WRITE \"${CMAKE_INSTALL_PREFIX}/include/c++/v1/cmath\" \"\${CMATH_CONTENT_PATCHED}\")
 ")
 
+# Define the __cpp_exception tag that -fwasm-exceptions imports from `env`.
+# wasm-ld merges this module-local definition with those imports, so links need
+# no post-processing to drop the `env` import. Installed as libcppexception.a so
+# env.sh can pull it with -lstatic=cppexception.
+add_library(cppexception STATIC "${CMAKE_CURRENT_SOURCE_DIR}/cpp_exception_tag.s")
+set_target_properties(cppexception PROPERTIES LINKER_LANGUAGE C)
+install(TARGETS cppexception
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+)
+
 # Install the environment script
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/env.sh" DESTINATION .)
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/env.bat" DESTINATION .)

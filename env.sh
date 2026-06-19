@@ -17,7 +17,10 @@ else
     fi
 fi
 
-export CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUSTFLAGS="-C link-arg=-L$WASM32_UNKNOWN_UNKNOWN_STDLIB/lib/ -L $WASM32_UNKNOWN_UNKNOWN_STDLIB/lib/ -lstatic=c -lstatic=c++abi -lstatic=unwind --Z wasm_c_abi=spec"
+# libcppexception.a defines the env.__cpp_exception tag that -fwasm-exceptions
+# emits and wasm-ld never supplies on bare wasm32-unknown-unknown. wasm-ld
+# merges it with the imports so links need no post-processing.
+export CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUSTFLAGS="-C link-arg=-L$WASM32_UNKNOWN_UNKNOWN_STDLIB/lib/ -L $WASM32_UNKNOWN_UNKNOWN_STDLIB/lib/ -lstatic=c -lstatic=c++abi -lstatic=unwind -lstatic=cppexception --Z wasm_c_abi=spec"
 export CFLAGS_wasm32_unknown_unknown="--sysroot=$WASM32_UNKNOWN_UNKNOWN_STDLIB -D__OpenBSD__ -D__WASM32_UNKNOWN_UNKNOWN__"
 export CXXFLAGS_wasm32_unknown_unknown="$CFLAGS_wasm32_unknown_unknown -fwasm-exceptions -mllvm -wasm-use-legacy-eh=false"
 export BINDGEN_EXTRA_CLANG_ARGS_wasm32_unknown_unknown="-fvisibility=default"
