@@ -2,18 +2,25 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 set(CMAKE_SYSTEM_NAME Generic)
 
-set(CMAKE_C_COMPILER clang)
-set(CMAKE_CXX_COMPILER clang++)
-set(CMAKE_ASM_COMPILER clang)
-set(CMAKE_LINKER lld)
+# Allow LLVM_TOOLCHAIN_PREFIX to point at a custom LLVM install (e.g.
+# /opt/homebrew/opt/llvm/bin/ on macOS, where Apple's stock clang has no
+# wasm32 target).
+if(NOT DEFINED LLVM_TOOLCHAIN_PREFIX)
+    set(LLVM_TOOLCHAIN_PREFIX "" CACHE STRING "Prefix path for clang/llvm-* tools")
+endif()
 
-set(CMAKE_AR llvm-ar)
-set(CMAKE_OBJCOPY llvm-objcopy)
-set(CMAKE_OBJCOPY_BIN llvm-objcopy)
-set(CMAKE_RANLIB llvm-ranlib)
-set(CMAKE_STRIP llvm-strip)
-set(CMAKE_SIZE_BIN llvm-size)
-set(CMAKE_NM llvm-nm)
+set(CMAKE_C_COMPILER ${LLVM_TOOLCHAIN_PREFIX}clang)
+set(CMAKE_CXX_COMPILER ${LLVM_TOOLCHAIN_PREFIX}clang++)
+set(CMAKE_ASM_COMPILER ${LLVM_TOOLCHAIN_PREFIX}clang)
+set(CMAKE_LINKER ${LLVM_TOOLCHAIN_PREFIX}lld)
+
+set(CMAKE_AR ${LLVM_TOOLCHAIN_PREFIX}llvm-ar)
+set(CMAKE_OBJCOPY ${LLVM_TOOLCHAIN_PREFIX}llvm-objcopy)
+set(CMAKE_OBJCOPY_BIN ${LLVM_TOOLCHAIN_PREFIX}llvm-objcopy)
+set(CMAKE_RANLIB ${LLVM_TOOLCHAIN_PREFIX}llvm-ranlib)
+set(CMAKE_STRIP ${LLVM_TOOLCHAIN_PREFIX}llvm-strip)
+set(CMAKE_SIZE_BIN ${LLVM_TOOLCHAIN_PREFIX}llvm-size)
+set(CMAKE_NM ${LLVM_TOOLCHAIN_PREFIX}llvm-nm)
 
 set(CMAKE_C_COMPILER_TARGET wasm32-unknown-unknown)
 set(CMAKE_CXX_COMPILER_TARGET wasm32-unknown-unknown)
